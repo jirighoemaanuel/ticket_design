@@ -1,21 +1,19 @@
-import { Pool } from 'pg';
+// db.js
+import { Client } from 'pg';
 import dotenv from 'dotenv';
-
 dotenv.config();
 
-const connectionString = process.env.DATABASE_URL || null;
+const client = new Client({
+  user: 'postgres',
+  host: 'localhost', // or your database host
+  database: process.env.DATABASE_NAME,
+  password: process.env.DATABASE_PASSWORD,
+  port: 5432, // default PostgreSQL port
+});
 
-const pool = new Pool(
-  connectionString
-    ? {
-        connectionString,
-        // In production (e.g., Heroku), you may need SSL. Control via NODE_ENV.
-        ssl:
-          process.env.NODE_ENV === 'production'
-            ? { rejectUnauthorized: false }
-            : false,
-      }
-    : undefined
-);
+client
+  .connect()
+  .then(() => console.log('Connected to PostgreSQL database'))
+  .catch((err) => console.error('Error connecting to PostgreSQL:', err));
 
-export default pool;
+export default client;

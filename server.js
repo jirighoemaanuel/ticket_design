@@ -1,5 +1,5 @@
 import express from 'express';
-import pool from './db.js';
+import client from './db.js';
 
 const app = express();
 app.use(express.json());
@@ -10,11 +10,9 @@ app.get('/', (req, res) => {
 });
 
 // Example route: read rows from a `users` table
-app.get('/users', async (req, res) => {
+app.get('/', async (req, res) => {
   try {
-    const result = await pool.query(
-      'SELECT id, name, email FROM users ORDER BY id'
-    );
+    const result = await pool.query('SELECT * FROM seats');
     res.json(result.rows);
   } catch (err) {
     console.error('DB query error', err);
